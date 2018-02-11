@@ -26,7 +26,7 @@ Distribution of applications is complicated and difficult. There is an entire pr
 
 With all things considered, a simple task of getting an application from a developers machine (actually this should be from your distributed version control system) into test or production, can turn out to be daunting. The problem only gets more challenging the bigger the organisation and number of applications.
 
-## Installation
+### Installation
 
 Even as a developer, I have had to endure a fair amount of time in the trenches of software/application installation. Needless to say, installation of applications can be a slow, error prone, tedious, and frustrating task. In software development circles there is an analogy of a gorilla holding a banana and is usually used to explain the _["n+1"](https://stackoverflow.com/questions/97197/what-is-n1-select-query-issue)_ problem related to ORM (Object Relational Mappers). I am going to use that analogy here because I think that it also applies. Think of the application as the banana. For installation, all we want is the "banana". But we don't get the banana. Instead, what we get is the banana, the huge angry looking gorilla holding it, all of the gorillas tribe, and the entire jungle that it lives in. I think you get the point. It's essentially an _"n+1"_ installation issue. Most applications come with a bucket load of dependencies (and each having their own set of dependencies).
 
