@@ -1,3 +1,5 @@
+![Getting Started](https://user-images.githubusercontent.com/33935506/36086590-fb308354-0fd5-11e8-887a-b5f7558fc34e.png)
+
 # Part 2 - Getting Started
 
 Before installing Docker, perhaps you would like to play with Docker in a hosted sandbox. If that's you, please have a look at [Docker Playground](https://labs.play-with-docker.com/).
