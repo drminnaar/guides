@@ -1,8 +1,10 @@
+![overview](https://user-images.githubusercontent.com/33935506/36073987-0a35ba0c-0f42-11e8-9d27-c882beb7352b.png)
+
 # Part 1 - Overview
 
 It is important to understand the backdrop and what ultimately lead to Docker and it's success. Therefore, in this guide, I am going to explain a few topics that relate to the challenges of application life-cycle and how Docker can help address those challenges. Firstly, I will discuss some of the problems associated with application life-cycle and why we need a better way of running applications. Secondly, I will discuss Docker, its associated technologies, and how Docker helps us run and manage applications better.
 
-## The Challenges
+## The Challenges of Software Deployment
 
 In this section, I will discuss some of the challenges associated with deploying and running applications.
 
@@ -174,3 +176,12 @@ A repository is the actual location of where specific images can be found within
 
 ![docker-repository](https://user-images.githubusercontent.com/33935506/36072808-259a842a-0f2f-11e8-8b3f-ac1790d8c39e.png)
 
+---
+
+## Summary
+
+I have discussed what I perceive to be the primary challenges associated with software deployment. The key takeaway from that discussion is that we need a better way to deploy software applications. And by deployment I refer to everything relating to distribution, installation, and management (operation) of software applications. We desire software applications that are more portable, cohesive, independent, and isolated from other applications/processes. This enables us to reduce the complexity and errors associated with software deployment. And this results in more robust, secure, and easier to scale software applications.
+
+Hypervisor technology allows us to create virtual machines (VM) whereby we can isolate our applications and manage our applications independently. One of the problems associated with VM is that they consume a lot of host resources. That's partly because each VM is required to have it's own guest operating system. Starting up a VM is relatively fast when compared to starting up (or preparing) a physical machine. However, when compared to startup time of a container for example, containers are exponentially quicker. One of the other problems relating to virtual machines is that they are not as portable as containers.
+
+As I mentioned before in this guide. Containers are the next step in the evolution of application deployment. However, containers are difficult to understand and work with. Therefore, Docker emerged as a technology to make managing containers simpler. Containers allow us to package our applications into single cohesive, isolated, and portable packages that can be easily moved between different deployment environments.
