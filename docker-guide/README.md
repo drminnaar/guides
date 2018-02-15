@@ -18,5 +18,5 @@ This is a guide on Docker technology. The intent of the guide is to serve as a s
 1. [GIT](https://github.com/drminnaar/guides/blob/master/docker-guide/examples/4-git-example.md)
 
 [Overview]: https://github.com/drminnaar/guides/blob/master/docker-guide/1-overview.md
-[Getting Started]: https://github.com/drminnaar/guides/blob/master/docker-guide/1-getting-started.md
+[Getting Started]: https://github.com/drminnaar/guides/blob/master/docker-guide/2-getting-started.md
 [Glossary]: https://github.com/drminnaar/guides/blob/master/docker-guide/glossary.md
