@@ -76,29 +76,18 @@ The solution to overcoming the challenges presented above has been to use virtua
 
 Often, the terms _Docker_ and _containers_ are used interchangeable as though they're the same thing. However, Docker is not a container and nor did Docker invent the concept of containers. Containers have been around for more than a decade, and the idea of containers a lot longer ([History Of Containers](https://rhelblog.redhat.com/2015/08/28/the-history-of-containers/)). Docker is a classic example of _["Standing on the shoulder of giants"](https://en.wikipedia.org/wiki/Standing_on_the_shoulders_of_giants)_. Containers are inherently difficult to work with and manage. Therefore, _Docker_ came along and took a difficult to understand (and work with) technology and put it into reach of mere mortals. Docker is a container management system that makes container management easy.
 
-To further understand what Docker is, it is important to understand the following key topics:
+To further understand what Docker is, it is important to understand the Docker ecosystem and related technologies. Therefore, in the next section, I discuss a few of the core Docker components.
 
-* Virtual Machine
+### Docker Ecosystem
+
+The Docker ecosystem is composed of the following core components:
+
 * Image
 * Container
-* Virtual Machine / Container Comparison
 * Registry
 * Repository
 
-### Virtual Machine
-
-In the previous section I discussed some of the challenges related to application life-cycle. A big part of the problem has been having to work within the bounds of physical computer constraints. These challenges gave rise to hypervisor technology that enable us to create virtual machines. Because containers are often compared to virtual machines, I would like to explain what the differences are to help reduce or avoid any confusion between the two.
-
-What if one could create a sort of "vertical slice" of a physical machine. Each slice would be allocated a percentage of the physical machines resources. Therefore, one could then install a specific operating system to each slice to satisfy the application/s requirements. This sounds great in theory, but one can't very well take a knife to a physical machine, divide it into bits, and expect it to still work. Not in the physical world anyways. Enter virtualization and the hypervisor. A hypervisor helps us divide our physical machines into virtual computing "slices". And though hypervisor technology is by no means a panacea, it goes a long way to help address some of the challenges mentioned above. A hypervisor helps us create virtual machines. A virtual machine is an emulation of a physical computer system in that it virtualizes physical computing resources like CPU, RAM, Network, and Disk.
-
-Let's look at a conceptual diagram of virtual machine technology.
-
-**Virtual Machine Diagram**
-![docker-guide-vm](https://user-images.githubusercontent.com/33935506/36017635-3e3e2324-0d81-11e8-8e24-c533b913c4e8.png)
-
-As can be seen from the diagram above, we have 3 "slices" of a physical machine where each slice is a virtual machine. An important takeaway is that virtual machines require their own guest operating system. In the diagram, I am also illustrating a _["Type-2 hosted hypervisor"](https://en.wikipedia.org/wiki/Hypervisor)_. This means that the hypervisor runs on a conventional operating system. The other type of hypervisor is the _["Type-1 bare metal hypervisor"](https://en.wikipedia.org/wiki/Hypervisor)_. These hypervisors run directly on hosts hardware without the need for a host operating system.
-
-### Image
+#### Image
 
 An image is a file (a binary representation of what a container should look like). Conceptually an image is a template (blueprint) for creating containers. In fact, a lot of the time when containers are mentioned, it is actually images to which is being referred. However, containers are a "run-time" thing whereas images are a "build-time" thing. The analogy that I like to use is a concept taken from object-oriented programming (OOP). In OOP, two of the most important concepts to understand are classes and objects. A class is a template(blueprint) and they are used to created objects at run-time. An object exhibits all the properties and behavior of a class except it only exists at run-time. Like a class, an image is used to create containers that represent a running instance of that image.
 
@@ -109,7 +98,7 @@ Therefore, if one wanted to run an instance of MongoDB or Elasticsearch on your 
 
 Remember, images are used to run containers. Therefore, a _MongoDB_ image will be used to run a _MongoDB_ container for example.
 
-### Container
+#### Container
 
 Think of an operating system with a whole bunch of processes running within it.These processes share just about everything (CPU, memory, network etc) and every process knows about every other process. But what if you want to run one or more processes within an isolated “sandbox” environment? The sandbox would provide isolation and allow each process to have its own process namespace for example. Furthermore, the sandbox would be able to control and limit the capabilities in terms of how much resources may be used by the process.
 
@@ -120,7 +109,7 @@ It is the notion of an isolated process in a "sandbox" that gave rise to contain
 
 As one can see from the image above, we initially started off with a Linux OS. I use Linux because the genesis of container technology all happened on the Linux OS. Each process has no (or very little) isolation. Through the use of _namepsaces_ and _control groups_, we are now able to run each process as an isolated process in it's own container.
 
-#### Namespaces
+##### Namespaces
 
 The official documentation for _[namespaces](http://man7.org/linux/man-pages/man7/namespaces.7.html)_ states the following:
 
@@ -135,7 +124,7 @@ Therefore, _namespaces_ provide process isolation by allowing each process to ru
 * User Namespace - Isolate user and group id's
 * UTS Namespace - Isolate hostname and NIS domain name
 
-#### Control Groups (CGroups)
+##### Control Groups (CGroups)
 
 The official documentation for _[cgroups](http://man7.org/linux/man-pages/man7/cgroups.7.html)_ states the following:
 
@@ -143,26 +132,7 @@ The official documentation for _[cgroups](http://man7.org/linux/man-pages/man7/c
 
 Therefore, _cgroups_ are all about organizing processes so that resources can then be allocated to them.
 
-### Virtual Machine / Container Comparison
-
-Containers are not mini-virtual machines, and they're not like virtual machines. This should be clear from my discussion above. However, to help further clarify the meaning of containers, I provide a further comparison between virtual machines and containers as can be seen below.
-
-**VM / Container Comparison**
-![docker-guide-vm-vs-container](https://user-images.githubusercontent.com/33935506/36058292-e9406996-0e24-11e8-9b95-1c4236e77093.png)
-
-From the diagram above, the differences between virtual machines and containers can be summarized as follows:
-
-* Where a hypervisor virtualizes the physical computing system (hardware), containers virtualize the operating system.
-&nbsp;
-* Where a hypervisor abstracts the operating system from the hardware, containers abstract an application from the operating system.
-&nbsp;
-* Where virtual machines need their own guest operating system, containers share the host operating system. This is why, in order to run Linux containers, you need a Linux host operating system. And you will need a Windows operating system to run Windows containers.
-
-Furthermore, virtual machines and containers are also not opposing technologies. They can in fact be used as complimentary technologies. This is how Windows and Apple have managed to offer Linux containers on their platforms. Both Windows and Apple operating systems require a hypervisor to run a virtual machine with a Linux operating system (Alpine) so that one can use a technology like Docker to host Linux containers. Although, Windows has made significant progress in terms of their container offering. As of the time of this writing, one can choose whether to use Windows or Linux containers on a Windows (Windows 10 Pro) operating system.
-
-Containers also do not replace virtual machines. Although there are many scenarios where using containers would be better (microservices for example). As mentioned above, the two technologies are quite different. Remember, virtual machines are all about virtualizing hardware, and containers are all about virtualizing the operating system.
-
-### Registry
+#### Registry
 
 A registry at it's most basic level is a place where one can store and retrieve Docker images. Docker provides both public and private registries and can be found [here](https://hub.docker.com/). If you've ever worked with software development package managers like [NPM](https://www.npmjs.com/) or [Nuget](https://www.nuget.org/). Or if you've worked with linux package managers like [DPKG](https://en.wikipedia.org/wiki/Dpkg) or [RPM](https://en.wikipedia.org/wiki/Rpm_(software)). Then the notion of working with Docker registries should feel familiar.
 
@@ -170,11 +140,132 @@ Docker isn't the only platform that offers Docker registries. Microsoft Azure, A
 
 For more information on Docker registry, please view the official Docker documentation [here](https://docs.docker.com/registry/)
 
-### Repository
+#### Repository
 
 A repository is the actual location of where specific images can be found within a Docker registry. This is further clarified in the diagram below.
 
 ![docker-repository](https://user-images.githubusercontent.com/33935506/36072808-259a842a-0f2f-11e8-8b3f-ac1790d8c39e.png)
+
+### Virtual Machine / Container Comparison
+
+In the section _[The Challenges of Software Deployment](#The-Challenges-of-Software-Deployment)_, I discussed some of the challenges related to application life-cycle. A big part of the problem has been having to work within the bounds of physical computer constraints. These challenges gave rise to hypervisor technology that enable us to create virtual machines. Because containers are often compared to virtual machines, I would like to explain what the differences are to help reduce or avoid any confusion between the two.
+
+#### Virtual Machine
+
+What if one could create a sort of "vertical slice" of a physical machine. Each slice would be allocated a percentage of the physical machines resources. Therefore, one could then install a specific operating system to each slice to satisfy the application/s requirements. This sounds great in theory, but one can't very well take a knife to a physical machine, divide it into bits, and expect it to still work. Not in the physical world anyways. Enter virtualization and the hypervisor. A hypervisor helps us divide our physical machines into virtual computing "slices". And though hypervisor technology is by no means a panacea, it goes a long way to help address some of the challenges mentioned above. A hypervisor helps us create virtual machines. A virtual machine is an emulation of a physical computer system in that it virtualizes physical computing resources like CPU, RAM, Network, and Disk.
+
+Let's look at a conceptual diagram of virtual machine technology.
+
+**Virtual Machine Diagram**
+![docker-guide-vm](https://user-images.githubusercontent.com/33935506/36017635-3e3e2324-0d81-11e8-8e24-c533b913c4e8.png)
+
+As can be seen from the diagram above, we have 3 "slices" of a physical machine where each slice is a virtual machine. An important takeaway is that virtual machines require their own guest operating system. In the diagram, I am also illustrating a _["Type-2 hosted hypervisor"](https://en.wikipedia.org/wiki/Hypervisor)_. This means that the hypervisor runs on a conventional operating system. The other type of hypervisor is the _["Type-1 bare metal hypervisor"](https://en.wikipedia.org/wiki/Hypervisor)_. These hypervisors run directly on hosts hardware without the need for a host operating system.
+
+#### Virtual Machine Compared to Containers
+
+Containers are not mini-virtual machines, and they're not like virtual machines. To help further clarify the meaning of containers, I provide a further comparison between virtual machines and containers as can be seen below.
+
+**VM / Container Comparison**
+![docker-guide-vm-vs-container](https://user-images.githubusercontent.com/33935506/36058292-e9406996-0e24-11e8-9b95-1c4236e77093.png)
+
+From the diagram above, the differences between virtual machines and containers can be summarized as follows:
+
+* Where a hypervisor virtualizes the physical computing system (hardware), containers virtualize the operating system.
+
+* Where a hypervisor abstracts the operating system from the hardware, containers abstract an application from the operating system.
+
+* Where virtual machines need their own guest operating system, containers share the host operating system. This is why, in order to run Linux containers, you need a Linux host operating system. And you will need a Windows operating system to run Windows containers.
+
+Furthermore, virtual machines and containers are also not opposing technologies. They can in fact be used as complimentary technologies. This is how Windows and Apple have managed to offer Linux containers on their platforms. Both Windows and Apple operating systems require a hypervisor to run a virtual machine with a Linux operating system (Alpine) so that one can use a technology like Docker to host Linux containers. Although, Windows has made significant progress in terms of their container offering. As of the time of this writing, one can choose whether to use Windows or Linux containers on a Windows (Windows 10 Pro) operating system.
+
+Containers also do not replace virtual machines. Although there are many scenarios where using containers would be better (microservices for example). As mentioned above, the two technologies are quite different. Remember, virtual machines are all about virtualizing hardware, and containers are all about virtualizing the operating system.
+
+### Docker Container Management
+
+In this section, I am going to explain what it meant by container management and how Docker enables it.
+
+I would summarize Docker container management into 4 primary parts, namely:
+
+* Pull Image
+* Build Image
+* Run Image
+* Push Image
+
+#### Pull Image
+
+The easiest way to start working with Docker images and containers is to download an existing image from a Docker _Registry_ like _Docker Hub_.
+
+For example, to download the official MongoDB image, one would execute the following command:
+
+```docker
+docker pull mongo
+```
+
+![docker-pull](https://user-images.githubusercontent.com/33935506/36275093-8a473dc6-1292-11e8-9d88-e19a26e76a8c.png)
+
+Once the image has been downloaded, it will be ready to run containers off of.
+
+#### Build Image
+
+If one requires a custom container that has been tailored to your application requirements, then one needs to build an _Image_. Docker provides the means to build an _Image_ through the use of a _Dockerfile_ and a Docker _build_ command.
+
+Below I have outlined what a Docker file (Dockerfile) could potentially look like.
+
+```docker
+FROM node:8.9.4-alpine
+RUN apk update && apk upgrade && apk add git --no-cache
+RUN git clone -q https://github.com/drminnaar/react-clicker.git
+WORKDIR react-clicker
+RUN npm install > /dev/null
+EXPOSE 8080
+CMD ["npm", "start"]
+```
+
+A Docker file (mostly named Dockerfile) is used to define what an _Image_ should look like. The Docker file above can be explained as follows:
+
+1. Create a new image that is based off the official Node image. Furthermore, use a specific image that runs off Alpine Linux (preferable because it's smaller) and uses Node version 8.9.4.
+1. Use the Alpine APK package manager to run some updates and install Git. Git does not come standard on Alpine Linux therefore we need to install it.
+1. Clone one of my sample projects from my personal github repository
+1. _'WORKDIR'_ will set current directory to 'react-clicker' (the name of the cloned repository).
+1. Install all required node packages by running 'npm install'
+1. _'EXPOSE'_ is used to publish a port that application will be available on
+1. _'CMD'_ is used to execute a command that will start application when image is used to start and run a new container.
+
+To create the Docker _Image_ we need to run a build command from the same path of the Dockerfile. For example:
+
+```docker
+docker build -t username/react-clicker:1.0.0 .
+```
+
+The above command instructs Docker to create a new _Image_ called username/react-clicker:1.0.0 and to use the Docker file found in current path (directory). You could call the image anything you want. However, when it comes to uploading an image to Docker Hub, then one is required to use the naming convention of _'username/image_name'_. The _`:1.0.0`_ part is referred to as a tag (this is the actual _Image_ that will be stored in _Repository_).
+
+![dockerfile-image](https://user-images.githubusercontent.com/33935506/36275092-8a146ebe-1292-11e8-8630-80b594287100.png)
+
+#### Run Container
+
+In order to run a container, one must have an _Image_ first. There are primarily 2 ways to obtain images. One can either build your own _Image_, or one can download pre-built images from a Docker registry. However, one an _Image_ is available on the local machine, then it's as simple as executing a Docker command to run a container off of that _Image_. For example, if I use the example from the [Build Image](#Build-Image) from above, all one would need to do is execute the following command to run that _Image_ as a container.
+
+```docker
+docker run --name react-clicker -p 8080:8080 -d username/react-clicker
+```
+
+The above command will have the affect of running the _'react-clicker'_ application in the background on local port 8080.
+
+![docker-run](https://user-images.githubusercontent.com/33935506/36275095-8aa890ee-1292-11e8-9d94-ed6446ed735c.png)
+
+#### Push Image
+
+Being able to build and run images is great! But what if one wants to share ones _Image_? The easiest way to share a Docker _Image_ is to use a Docker _Registry (public or private)_. Fortunately, Docker has made uploading an _Image_ to a _Registry_ really simple by providing the ```docker push``` command.
+
+Using the _Image_ that we built and ran in the [Build Image](#Build-Image) and [Run Container](#Run-Container) sections respectively. Run the following command to upload _Image_ to _Registry_:
+
+```docker
+docker push username/react-clicker:1.0.0
+```
+
+Once the _Image_ has been successfully pushed to the _Repository_ on the _Registry, it will be available for others to download and use (provided you're using a public _Repository_)
+
+![docker-push](https://user-images.githubusercontent.com/33935506/36275094-8a797dea-1292-11e8-8269-68fbed6cf5d5.png)
 
 ---
 
