@@ -8,6 +8,7 @@ This is a guide on Docker technology. The intent of the guide is to serve as a s
 
 1. [Overview]
 1. [Getting Started]
+1. [Docker Container Management]
 1. [Glossary]
 
 ## Examples
@@ -19,4 +20,5 @@ This is a guide on Docker technology. The intent of the guide is to serve as a s
 
 [Overview]: https://github.com/drminnaar/guides/blob/master/docker-guide/1-overview.md
 [Getting Started]: https://github.com/drminnaar/guides/blob/master/docker-guide/2-getting-started.md
+[Docker Container Management]: https://github.com/drminnaar/guides/blob/master/docker-guide/3-docker-container-management.md
 [Glossary]: https://github.com/drminnaar/guides/blob/master/docker-guide/glossary.md
