@@ -2,132 +2,493 @@
 
 ## Summary
 
-In this guide, I am going to cover the essentials in terms of getting up and running with MongoDB. The best way to start learning new technology is to jump straight in and start using it. Therefore, after a brief introduction to MongoDB, the following sections are all about setting up your own MongoDB instance using 4 different hosting methods. Next, I introduce 5 tools that you can use to work with your MongoDB databases. The next section illustrates methods on creating your own database and collection with data. In this section I also provide a number of examples that illustrate some basic queries to query your data.
+This guide covers the essentials of MongoDb in terms of getting up and running with MongoDB. The guide provides a brief introduction to MongoDb, followed by sections on tools, hosting methods and basic queries and commands.
 
-**This guide is summarized as follows:**
-
-* [What Is MongoDB](#what-is-mongodb)
-* [MongoDB Setup](#mongodb-setup)
-  * [Install And Host Locally](#install-and-host-locally)
-  * [Install And Host Using Docker](#install-and-host-using-docker)
-  * [Host With MongoDB Atlas](#host-with-mongodb-atlas)
-  * [Host With MLab](#host-with-mlab)
-* [MongoDB Tools](#mongodb-tools)
-  * [MongoDB Shell](#mongodb-shell)
-  * [MongoDb Compass](#mongodb-compass)
-  * [NoSqlBooster](#nosqlbooster)
-  * [Robo 3T](#robo-3t)
-  * [Visual Studio Code](#visual-studio-code)
-* [Basic MongoDB Commands](#basic-mongodb-commands)
-* [Conclusion](#conclusion)
-
-Lastly, this guide does not cover the reasons to use MongoDB (perhaps a guide for another time). However, I would like to encourage readers to spend some time researching and understanding the rationale between choosing a NoSql database over a Sql database. MongoDB is not a replacement for SQL databases. It is merely an alternative that may (or may not) align better with ones specific requirements.
-
-The following question posted on Quora may be a good starting point:
-
-[What are some reasons to use traditional RDBMS over NoSQL?](https://www.quora.com/What-are-some-reasons-to-use-traditional-RDBMS-over-NoSQL)
-
-From my personal experience and perspective, I will mention that one should think very carefully before committing to a NoSql database if your data is required to be agnostic. In this case I have found Sql databases to be a far better choice due to the simplicity of modelling data and exposing it in many different ways for many different applications.
+- [What Is MongoDB](#what-is-mongodb)
+- [MongoDB Setup](#mongodb-setup)
+  - [Local Install](#local-install)
+  - [WSL2 Install](#wsl2-install)
+  - [Host Using Docker](#host-using-docker)
+  - [Host Using MongoDB Atlas](#host-using-mongodb-atlas)
+- [MongoDB Clients](#mongodb-clients)
+  - [MongoDB Shell](#mongodb-shell)
+  - [MongoDb Compass](#mongodb-compass)
+  - [NoSqlBooster](#nosqlbooster)
+  - [Robo 3T](#robo-3t)
+  - [Visual Studio Code](#visual-studio-code)
+- [Basic MongoDB Commands](#basic-mongodb-commands)
+- [Conclusion](#conclusion)
 
 ---
 
 ## What Is MongoDB?
 
-MongoDB is a database. More specifically, it is an open source document-oriented database that has been designed for scalability and simplicity for both developers and sysadmins. Traditional relational database management systems (RDBMS) like MSSQL, Oracle, MySQL, and PostGreSQL store data in tables having a static schema composed of rows and columns. However, MongoDB stores it's data in JSON-like documents having dynamic schemas.
+MongoDb is an open source document-oriented database that has been designed for scalability and simplicity for both developers and sysadmins. Traditional relational database management systems (RDBMS) like MSSQL, Oracle, MySQL, and PostGreSQL store data in tables having a static schema composed of rows and columns. However, MongoDB stores it's data in JSON-like documents having dynamic schemas.
+
+For more information, see the following links:
+
+- [Official MongoDb Website](https://www.mongodb.com/)
+- [What Is MongoDb](https://www.mongodb.com/what-is-mongodb)
+- [MongoDb Docs](https://docs.mongodb.com/manual/)
+- [MongoDb Guides](https://docs.mongodb.com/guides/)
+- [Who Uses MongoDb](https://www.mongodb.com/who-uses-mongodb)
 
 ---
 
 ## MongoDB Setup
 
+There are a number of software offerings from MongoDb.
+
+For more information in terms of what MongoDb offerings are available for you to try, please visit [the official MongoDb downloads website](https://www.mongodb.com/try/download)
+
 I will discuss 4 options to get up and running with MongoDB:
 
-* Install and host locally
-* Install and host in Docker
-* Register for and use MongoDB Atlas (Database As A Service)
-* Register for and use MLab (Database As A Service)
+- Local Install
+- Host in Docker
+- MongoDB Atlas (Database As A Service)
 
-### Install And Host Locally
+### Local Install
 
-Installing MongoDB is relatively straight forward. There are currently 3 platform (Windows, Linux, OSX) releases available and can be found [here](https://www.mongodb.com/download-center?jmp=homepage#community)
+MongoDb offers a community version that one can find [here](https://www.mongodb.com/try/download/community).
 
-For more specific installation instructions, please see the following links:
+For specific platform/OS installation instructions, please see the following links:
 
-* [Install MongoDB On Linux](https://docs.mongodb.com/v3.0/administration/install-on-linux)
-* [Install MongoDB On Windows](https://docs.mongodb.com/v3.0/tutorial/install-mongodb-on-windows)
-* [Install MongoDB On OSX](https://docs.mongodb.com/v3.0/tutorial/install-mongodb-on-os-x)
+- [Install MongoDB On Linux](https://docs.mongodb.com/manual/administration/install-on-linux/)
+- [Install MongoDB On Windows](https://docs.mongodb.com/manual/tutorial/install-mongodb-on-windows/)
+- [Install MongoDB On OSX](https://docs.mongodb.com/manual/tutorial/install-mongodb-on-os-x/)
 
-### Install And Host Using Docker
+### WSL2 Install
+
+According to the official [MongoDb documentation](https://docs.mongodb.com/manual/administration/install-on-linux/), MongoDB does not support the _[Windows Subsystem for Linux (WSL)]_
+
+![mongodb-wsl-support](https://user-images.githubusercontent.com/33935506/95008612-e226ca80-0677-11eb-971a-1ffd04f66357.png)
+
+However, it is possible to install MongoDb on _[Windows Subsystem for Linux 2 (WSL2)]_
+
+#### Instructions
+
+- Install WSL2 as per the [official Microsoft WSL installation guide](https://docs.microsoft.com/en-us/windows/wsl/install-win10)
+- When choosing a Linux distribution, select an Ubuntu Linux distribution
+- Install MongoDB as per the [official MongoDB installation guide](https://docs.mongodb.com/manual/tutorial/install-mongodb-on-ubuntu/). A summary of the install instructions is provided below:
+  
+  ```bash
+  # Reload local package database
+  sudo apt update
+
+  # Upgrade distro
+  sudo apt full-upgrade -y
+
+  # Import the public key used by the package management system
+  wget -qO - https://www.mongodb.org/static/pgp/server-4.4.asc | sudo apt-key add -  
+
+  # Create a list file for MongoDB
+  # This example uses Ubuntu 18.04
+  echo "deb [ arch=amd64,arm64 ] https://repo.mongodb.org/apt/ubuntu bionic/mongodb-org/4.4 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-4.4.list
+
+  # Reload local package database
+  sudo apt update
+
+  # Install the MongoDB packages
+  sudo apt-get install -y mongodb-org
+
+  # Alternatively, one can install
+  sudo apt-get install -y mongodb-org-shell
+  ```
+
+- Start MongoDB service (`mongod`)
+  
+  > **NOTE:** Typically the command `sudo systemctl status|start|stop|restart mongodb` is used to manage the MongoDB service. However, in order to keep WSL lightweight, `SysVinit` is used over `systemd`. Therefore, upon installing MongoDB using the commands above, an error is received that prevents MongoDB from being setup as a service. This is because systemctl requires systemd. Despite this constraint, one can still start a MongoDB instance using the commands below.
+
+  ```bash
+  # Verify that the MongoDB shell has been installed
+  mongo --version
+
+  # Verify that the MongoDB server hs been installed
+  mongod --version
+  cat /etc/mongod.conf
+
+  # Start a MongoDB instance
+  mkdir -p ~/mongodb/data/db
+  mongod --dbpath ~/mongodb/data/db --fork --logpath /dev/null
+
+  # Connect to MongoDB instance
+  mongo --host localhost --port 27017
+  ```
+
+### Host Using Docker
 
 If you have never used [Docker] before, then this option is less suitable for you as it implies having some Docker knowledge and experience. However, if you are still interested in pursuing this option, then I recommend viewing my [Docker Guide] as a starting point. I also have a [Docker Cheatsheet] that you may find useful.
 
 The Docker image that will be used, is the [official Docker MongoDB image](https://hub.docker.com/_/mongo).
 
-#### Run MongoDB
+I have created a project called [_mongodb-stack_](https://github.com/drminnaar/mongodb-stack) that provides examples of how to host _MongoDB_ in development using different techniques.
 
+#### Example 1
 
-##### Run MongoDB Using Named Volume
+Host a single node MongoDb instance using _docker_.
 
-For the following examples I map the Docker MongoDB port of _**27017**_ to a local port of _**37017**_. The reason for this is because I have a local instance on MongoDB running that is already using the _**27017**_ port.
+- Run
 
-To run a new MongoDB container, execute the following command from the CLI:
+  ```bash
+  # Create docker network that will be used by MongoDb container
+  docker network create mongo-net
 
-```docker
-docker run --rm --name mongo-dev -p 37017:27017 -v mongo-dev-db:/data/db -d mongo
-```
+  # Run MongoDb container
+  docker container run \
+      --detach \
+      --name mongo-1 \
+      --publish 27017:27017 \
+      --restart unless-stopped \
+      --network mongo-net \
+      mongo:4.4-bionic
+  ```
 
-CLI Command | Description
---- | ---
---rm | remove container when stopped
---name mongo-dev | give container a custom name
--p | map container published port to local port
--v mongo-dev-db/data/db | map the container volume 'data/db' to a custom name 'mongo-dev-db'
--d mongo | run mongo container as a daemon in the background
+- Connect
 
-##### Run MongoDB Using Bind Mount
+  ```bash
+  mongo --host localhost --port 27017
 
-```bash
-cd
-mkdir -p mongodb/data/db
-docker run --rm --name mongo-dev -p 37017:27017 -v ~/mongodb/data/db:/data/db -d mongo
-```
+  # use events_db and show events
+  show dbs
+  db.stats()
+  ```
 
-CLI Command | Description
---- | ---
---rm | remove container when stopped
---name mongo-dev | give container a custom name
--p | map container published port to local port
--v ~/mongodb/data/db/data/db | map the container volume 'data/db' to a bind mount '~/mongodb/data/db'
--d mongo | run mongo container as a daemon in the background
+- Cleanup
 
-#### Access MongoDB
+  ```bash
+  # Remove MongoDb container
+  docker container rm mongo-1 --force
 
-##### Access MongoDB From Local Machine
+  # Remove docker network
+  docker network rm mongo-net
+  ```
 
-1. Type the following command to access MongoDB instance hosted within docker container:
+#### Example 2
 
-   ```docker
-   mongo --host localhost --port 37017
-   ```
+Host a single node MongoDb instance using _docker-compose_.
 
-##### Access MongoDB Via Docker Interactive TTY
+- Define stack
 
-There are 2 steps to accessing the MongoDB shell.
+  ```yml
+  version: "3.7"
+  services:
+    mongo-1:
+      image: mongo:4.4-bionic
+      container_name: mongo-1
+      restart: unless-stopped
+      ports:
+        - 27017:27017
+      networks:
+        - default
+  networks:
+    default:
+      name: mongo-net
+      driver: bridge
+  ```
 
-1. Firstly, access the MongoDB container shell by executing the following command:
+- Run stack
 
-   ```bash
-   docker exec -it mongo-dev bash
-   ```
+  ```bash
+  # Run MongoDb stack as a daemon
+  docker-compose up -d
+  ```
 
-   This will open an interactive shell (bash) on the MongoDB container.
+- Connect
 
-1. Secondly, once inside the container shell, access the MongoDB shell by executing the following command:
+  ```bash
+  mongo --host localhost --port 27017
 
-   ```bash
-   mongo localhost
-   ```
+  # use events_db and show events
+  show dbs
+  db.stats()
+  ```
 
-### Host With MongoDB Atlas
+- Delete stack
+
+  ```bash
+  # Remove MongoDb stack including the removal of volumes
+  docker-compose down -v
+  ```
+
+#### Example 3
+
+Host a single node MongoDb instance using _docker_. Configure a bind mount for MongoDb database files.
+
+- Run
+
+  ```bash
+  # Create a directory to hold MongoDb data
+  mkdir -p ~/mongo-stack/data/db
+
+  # Create docker network that will be used by MongoDb container
+  docker network create mongo-net
+
+  # Run MongoDb container specifying bind mount
+  docker container run \
+      --detach \
+      --name mongo-1 \
+      --publish 27017:27017 \
+      --restart unless-stopped \
+      --network mongo-net \
+      --volume ~/mongo-stack/data/db:/data/db \
+      mongo:4.4-bionic
+  ```
+
+- Connect
+
+  ```bash
+  mongo --host localhost --port 27017
+
+  # use events_db and show events
+  show dbs
+  db.stats()
+  ```
+
+- Cleanup
+
+  ```bash
+  # Remove MongoDb container
+  docker container rm mongo-1 --force
+
+  # Remove docker network
+  docker network rm mongo-net
+
+  # Remove database files (may need sudo)
+  rm -r ~/mongo-stack/data/db/*
+  ```
+
+#### Example 4
+
+Host a single node MongoDb instance using _docker-compose_. Configure a bind mount for MongoDb database files.
+
+- Define stack
+
+  ```bash
+  # Create a directory to hold MongoDb data
+  mkdir -p ~/mongo-stack/data/db
+  ```
+
+  ```yml
+  version: "3.7"
+  services:
+    mongo-1:
+      image: mongo:4.4-bionic
+      container_name: mongo-1
+      restart: unless-stopped
+      ports:
+        - 27017:27017
+      networks:
+        - default
+      volumes:
+        - type: bind
+          source: ~/mongo-stack/data/db
+          target: /data/db
+  networks:
+    default:
+      name: mongo-net
+      driver: bridge
+  ```
+
+- Run stack
+
+  ```bash
+  # Run MongoDb stack as a daemon
+  docker-compose up -d
+  ```
+
+- Connect
+
+  ```bash
+  mongo --host localhost --port 27017
+
+  # use events_db and show events
+  show dbs
+  db.stats()
+  ```
+
+- Delete stack
+
+  ```bash
+  # Remove MongoDb stack including the removal of volumes
+  docker-compose down -v
+
+  # Remove database files (may need sudo)
+  rm -r ~/mongo-stack/data/db/*
+  ```
+
+#### Example 5
+
+Host a single node MongoDb instance using _docker_. Use environment variables to specify authentication information and initial database. Specify a javascript file that will be executed as part of setup and initialization (uses entry point scripts)
+
+- Prepare javascript file
+
+  ```bash
+  # Create scripts folder
+  mkdir -p ~/mongo-stack/scripts
+
+  # Create events.js in scripts folder
+  cat << EOF > ~/mongo-stack/scripts/events.js
+  db.events.insertOne({
+        "_id": "5f66c8ddba2c5ed57bd10c62",
+        "name": "mollit",
+        "isActive": true,
+        "address": "300 Independence Avenue, Bedias, Virgin Islands, 3014",
+        "about": "Et officia mollit fugiat ut amet. Cupidatat officia commodo est sit nostrud ea quis tempor. Tempor ex proident minim tempor labore proident laborum id excepteur.",
+        "date": "Friday, August 30, 2019 6:09 PM",
+        "latitude": "67.018372",
+        "longitude": "138.780409",
+        "tags": [
+            "eiusmod",
+            "officia",
+            "deserunt",
+            "nostrud",
+            "nulla"
+        ]
+    });
+  EOF
+  ```
+
+- Run
+
+  ```bash
+  # Create docker volume
+  docker volume create mongo-data-db
+
+  # Create docker network that will be used by MongoDB container
+  docker network create mongo-net
+
+  # Run MongoDB container specifying environment variables
+  # Take note of the 'docker-entrypoint-initdb.d' bind mount
+  docker container run \
+      --detach \
+      --name mongo-1 \
+      --publish 27017:27017 \
+      --restart unless-stopped \
+      --network mongo-net \
+      --volume mongo-data-db:/data/db \
+      --volume ~/mongo-stack/scripts/events.js:/docker-entrypoint-initdb.d/events.js:ro \
+      --env MONGO_INITDB_ROOT_USERNAME=root \
+      --env MONGO_INITDB_ROOT_PASSWORD=password \
+      --env MONGO_INITDB_DATABASE=events_db \
+      mongo:4.4-bionic
+  ```
+
+- Connect
+
+  ```bash
+  # connect to mongodb instance using credentials
+  mongo --host localhost --port 27017 --username root --password password --authenticationDatabase admin
+
+  # use events_db and show events
+  use events_db
+  show collections
+  db.events.find().pretty()
+  ```
+
+- Cleanup
+
+  ```bash
+  # Remove MongoDb container
+  docker container rm mongo-1 --force
+
+  # Remove docker network
+  docker network rm mongo-net
+
+  # Remove database files (may need sudo)
+  rm -r ~/mongo-stack
+  ```
+
+#### Example 6
+
+Host a single node MongoDb instance using _docker-compose_. Use environment variables to specify authentication information and initial database. Specify a javascript file that will be executed as part of setup and initialization (uses entry point scripts)
+
+- Prepare javascript file
+
+  ```bash
+  # Create scripts folder
+  mkdir -p ~/mongo-stack/scripts
+
+  # Create events.js in scripts folder
+  cat << EOF > ~/mongo-stack/scripts/events.js
+  db.events.insertOne({
+        "_id": "5f66c8ddba2c5ed57bd10c62",
+        "name": "mollit",
+        "isActive": true,
+        "address": "300 Independence Avenue, Bedias, Virgin Islands, 3014",
+        "about": "Et officia mollit fugiat ut amet. Cupidatat officia commodo est sit nostrud ea quis tempor. Tempor ex proident minim tempor labore proident laborum id excepteur.",
+        "date": "Friday, August 30, 2019 6:09 PM",
+        "latitude": "67.018372",
+        "longitude": "138.780409",
+        "tags": [
+            "eiusmod",
+            "officia",
+            "deserunt",
+            "nostrud",
+            "nulla"
+        ]
+    });
+  EOF
+  ```
+
+- Define stack
+
+  ```yaml
+  version: "3.7"
+  services:
+    mongo-1:
+      image: mongo:4.4-bionic
+      container_name: mongo-1
+      restart: unless-stopped
+      ports:
+        - 27017:27017
+      networks:
+        - default
+      environment:
+        - MONGO_INITDB_ROOT_USERNAME=root
+        - MONGO_INITDB_ROOT_PASSWORD=password
+        - MONGO_INITDB_DATABASE=events_db
+      volumes:
+        - type: volume
+          source: mongo-data-db
+          target: /data/db
+        - type: bind
+          source: ~/mongo-stack/scripts/events.js
+          target: /docker-entrypoint-initdb.d/events.js
+          read_only: true
+  networks:
+    default:
+      name: mongo-net
+      driver: bridge
+  volumes:
+    mongo-data-db:
+  ```
+
+- Run stack
+
+  ```bash
+  # Run MongoDb stack as a daemon
+  docker-compose up -d
+  ```
+
+- Connect
+
+  ```bash
+  mongo --host localhost --port 27017 --username root --password password --authenticationDatabase admin
+
+  # use events_db and show events
+  use events_db
+  show collections
+  db.events.find().pretty()
+  ```
+
+- Delete stack
+
+  ```bash
+  # Remove MongoDb stack including the removal of volumes
+  docker-compose down -v
+  ```
+
+### Host Using MongoDB Atlas
 
 [MongoDB Atlas] is a _Data as a Service (DaaS)_ offering, and is hosted in the cloud. There is no installation of MongoDB required and a free tier is available.
 
@@ -139,69 +500,53 @@ Once you have registered and setup your MongoDB instance on _Atlas_, you will be
 
 ![atlas](https://user-images.githubusercontent.com/33935506/37251882-d19a3818-2520-11e8-97f6-7015435f3cbd.png)
 
-### Host With MLab
-
-[MLab] is a _Data as a Service (DaaS)_ offering, and is hosted in the cloud. There is no installation of MongoDB required and a free tier is available.
-
-To get started, signup for free account [here](https://mlab.com/signup/). The free tier entitles you to 500MB storage.
-
-Please review the [MLab Documentation] for more information.
-
-Once you have registered and setup your MongoDB instance on _MLab_, you will be presented with a dashboard resembling the following image:
-
-![mlab](https://user-images.githubusercontent.com/33935506/37251951-ebb4dd74-2521-11e8-88bc-7db18f0a208c.png)
-
 ---
 
-## MongoDB Tools
+## MongoDB Clients
 
-The tooling for MongoDB has improved a lot of late and there are many options. I have worked with the following tools and I find them all quite good. It's really a matter of personal preference but I find that I tend to use them together.
+The following MongoDB clients are popular choices for managing and/or interacting with MongoDB database:
+
+- MongoDB Shell
+- MongoDB Atlas
+- NoSqlBooster
+- Robo3T
+- Visual Studio Code
 
 ### MongoDB shell
 
 The MongoDB shell is the default way of interacting with MongoDB databases.
 
-* Connect to MongoDB
+```bash
+# connect to MongoDB
+mongo --host localhost --port 27017
 
-  ```bash
-  mongo localhost
-  ```
+# show Current Database
+db
 
-* List Available Databases
+# List Available Databases
+show dbs
 
-  ```bash
-  show dbs
-  ```
+# create Database
+use message_db
 
-* Create Database
+# create Collection
+db.messages.insert({ message: 'hello mongodb' })
 
-  ```bash
-  use message_db
-  ```
-
-* Create Collection
-
-  ```bash
-  db.messages.insert({ message: 'hello mongodb' })
-  ```
-
-* List Collections
-
-  ```bash
-  show collections
-  ```
+# list Collections
+show collections
+```
 
 ### MongoDB Compass
 
-[MongoDB Compass] is a Graphical User Interface (GUI) tool that allows one to explore your MongoDB data.
+[MongoDB Compass] is a Graphical User Interface (GUI) tool that allows for the exploration of  MongoDB data.
 
-* It has a free addition available
-* It is cross platform and is available for Linux, Windows, and Mac
-* It supports the following primary features:
+- Freely available
+- It is cross platform and is available for Linux, Windows, and Mac
+- It supports the following primary features:
 
-  * Run ad hoc queries
-  * Perform CRUD operations on data
-  * View and optimize query performance
+  - Run ad hoc queries
+  - Perform CRUD operations on data
+  - View and optimize query performance
 
 In the following screenshot, I am connected to MongoDB running on my local machine, using MongoDB Compass.
 
@@ -213,14 +558,14 @@ For more information on MongoDB Compass, go [here](https://www.mongodb.com/produ
 
 [NoSqlBooster] is a Graphical User Interface (GUI) that provides an easy to use interface to work with your MongoDB database.
 
-* It has a free addition available
-* It is cross platform and is available for Linux, Windows, and Mac
-* It provides the following features:
+- It has a free addition available
+- It is cross platform and is available for Linux, Windows, and Mac
+- It provides the following features:
 
-  * Shell extensions
-  * Fluent Query API for MongoDB
-  * Query MongoDB with SQL
-  * Use Node Modules in your script
+  - Shell extensions
+  - Fluent Query API for MongoDB
+  - Query MongoDB with SQL
+  - Use Node Modules in your script
 
 In the following screenshot, I am connected to MongoDB running on Docker, using NoSqlBooster.
 
@@ -232,9 +577,9 @@ For more information, please visit the [official NoSqlBooster website](https://n
 
 [Robo 3T] (formerly RoboMongo), is a free GUI tool that can be used to explore your MongoDB databases.
 
-* It is free to use.
-* It is cross platform and is available for Linux, Windows, and Mac
-* It provides a MongoDB GUI with embedded shell
+- It is free to use.
+- It is cross platform and is available for Linux, Windows, and Mac
+- It provides a MongoDB GUI with embedded shell
 
 In the following screenshot, I am connected to a local instance of MongoDB using Robo 3T:
 
@@ -246,63 +591,17 @@ For more information, go [here](https://robomongo.org/).
 
 ### Visual Studio Code
 
-Using the [Azure CosmosDB Extension], one can connect to MongoDB databases in addition to [Azure CosmosDB] databases.
+There are a number of Visual Studio Code extensions available for MongoDB. The following 2 extensions are great options:
 
-For more information, see the following links:
+- Azure Databases
 
-* [Azure CosmosDB Extension on Market Place](https://marketplace.visualstudio.com/items?itemName=ms-vscode.vscode-azureextensionpack)
-* [Azure CosmosDB Extension on Github](https://github.com/Microsoft/vscode-cosmosdb)
+  - [Market Place](https://marketplace.visualstudio.com/items?itemName=ms-azuretools.vscode-cosmosdb)
+  - [Github](https://github.com/microsoft/vscode-cosmosdb)
 
-#### Install Azure CosmosDB Extension
+- MongoDB For VS Code
 
-* Launch VS Code
-* Launch Quick Open (`ctrl+P`) from within VS Code
-* Paste the following command and press enter
-
-  ```bash
-  ext install ms-vscode.vscode-azureextensionpack
-  ```
-
-#### Configure User Settings
-
-Once you have the extension installed, you will need to ensure that you have a path to Mongo configured in your user settings. Press `Ctrl+,` to open your user settings. Therefore, because I am using a Linux based OS, I had to add the following setting to the user settings json:
-
-```json
-"mongo.shell.path": "/var/lib/mongodb",
-```
-
-#### Connect To Mongo On localhost
-
-To connect to MongoDB instance, follow the following steps:
-
-* Expand _Azure Cosmos DB_ extension panel located in explorer
-* Select the option to 'Attach Database Account'
-* Select MongoDB
-* Enter the connection details to MongoDB instance
-
-  ```shell
-  mongodb://localhost:27017
-  ```
-
-The steps are shown below:
-
-![vs-code-cosmodb-ext](https://user-images.githubusercontent.com/33935506/37252725-eafbe816-252e-11e8-93ef-155a1e9816bc.gif)
-
-#### Run Commands Using Mongo ScrapBooks
-
-To use the _'ScrapBook Feature'_, follow the following steps:
-
-* Attach to your MongoDB instance as seen above
-* Connect to database of your choice
-* Select 'New MongoDB ScrapBook' option to open scrapbook editor
-* Enter MongoDB command
-* Press `Ctrl+Shft+'` to execute
-
-The steps are shown below:
-
-![vs-code-scrapbook](https://user-images.githubusercontent.com/33935506/37253010-8797dee6-2534-11e8-9014-357f6b39c881.gif)
-
-At the time of this writing, there seems to be an [issue with Mongo ScrapBooks](https://github.com/Microsoft/vscode-cosmosdb/issues/214)
+  - [Market Place](https://marketplace.visualstudio.com/items?itemName=mongodb.mongodb-vscode)
+  - [Github](https://github.com/mongodb-js/vscode)
 
 ---
 
@@ -310,22 +609,18 @@ At the time of this writing, there seems to be an [issue with Mongo ScrapBooks](
 
 Once you have your MongoDB instance running or hosted, open a mongo shell to your MongoDB server. For the purposes of this demonstration, I will be using my local installation 'localhost'.
 
-1. Connect to MongoDB instance
+```bash
+# connect to mongodb instance
+mongo --host localhost --port 27017
 
-   ```bash
-   mongo localhost
-   ```
+# connect to specific database on mongodb instance
+mongo admin --host localhost --port 27017
 
-1. Create a 'zips_db' database
+# create a 'zips_db' database
+use zips_db
 
-   ```bash
-   use zips_db
-   ```
-
-1. Create 'zips' collection
-
-   ```javascript
-   db.zips.insertMany([
+# create 'zips' collection
+db.zips.insertMany([
      { "city" : "AGAWAM", "loc" : [ -72.622739, 42.070206 ], "pop" : 5338, "state" : "MA", "_id" : "01001" },
      { "city" : "CUSHMAN", "loc" : [ -72.51564999999999, 42.377017 ], "pop" : 36963, "state" : "MA", "_id" : "01002" },
      { "city" : "BARRE", "loc" : [ -72.10835400000001, 42.409698 ], "pop" : 4546, "state" : "MA", "_id" : "01005" },
@@ -337,109 +632,85 @@ Once you have your MongoDB instance running or hosted, open a mongo shell to you
      { "city" : "CHICOPEE", "loc" : [ -72.607962, 42.162046 ], "pop" : 3396, "state" : "MA", "_id" : "01013" },
      { "city" : "CHICOPEE", "loc" : [ -72.576142, 42.176443 ], "pop" : 1495, "state" : "MA", "_id" : "01020" }
    ])
-   ```
 
-1. Search Queries
 
-   * Get total collection count
 
-     ```javascript
-     db.zips.count()
-     ```
+# Read Operations
 
-   * Get all zip documents
+# get total collection count
+db.zips.count()
 
-     ```javascript
-     db.zips.find().pretty()
-     ```
+# get all zip documents
+db.zips.find().pretty()
 
-   * Get 5 zip documents
+# get 5 zip documents
+db.zips.find().limit(5).pretty()
 
-     ```javascript
-     db.zips.find().limit(5).pretty()
-     ```
+# get zip having a city name of 'BLANDFORD'
+db.zips.find({"city": "BLANDFORD"})
 
-   * Get zip having a city name of 'BLANDFORD'
-   
-     ```javascript
-     db.zips.find({"city": "BLANDFORD"})
-     ```
+# get zip having a city name of 'BLANDFORD', ignore case
+db.zips.find({"city": { $regex: /blandford/i } })
 
-   * Get zip having a city name of 'BLANDFORD', ignore case
+# get zip having a city names of 'BLANDFORD' and 'BRIMFIELD'
+db.zips.find({"city": { $in: ["BLANDFORD", "BRIMFIELD"] } }).pretty()
 
-     ```javascript
-     db.zips.find({"city": { "$regex": /blandford/i } })
-     ```
+# get zip having a city names of 'BLANDFORD' and 'BRIMFIELD', ignore case
+db.zips.find({"city": { $in: [ /blandford/i, /brimfield/i] } }).pretty ()
 
-   * Get zip having a city names of 'BLANDFORD' and 'BRIMFIELD'
-   
-     ```javascript
-     db.zips.find({"city": { "$in": ["BLANDFORD", "BRIMFIELD"] } }).pretty()
-     ```
+# get zip documents having a population greater than or equal to 30000
+db.zips.find({"pop": { $gte: 30000}}).pretty()
 
-   * Get zip having a city names of 'BLANDFORD' and 'BRIMFIELD', ignore case
+# get all zip documents and use projection to only display city and population
+db.zips.find({}, { "city": 1, "pop": 1, "_id": 0 })
 
-     ```javascript
-     db.zips.find({"city": { "$in": [ /blandford/i, /brimfield/i] } }).pretty ()
-     ```
+# get all zip documents and use projection to only display city and population. Sort documents by city name in descending order
+db.zips.find({}, { "city": 1, "pop": 1, "_id": 0 }).sort({"city": -1})
 
-   * Get zip documents having a population greater than or equal to 30000
 
-     ```javascript
-     db.zips.find({"pop": { "$gte": 30000}}).pretty()
-     ```
 
-   * Get all zip documents and use projection to only display city and population
-   
-     ```javascript
-     db.zips.find({}, { "city": 1, "pop": 1, "_id": 0 })
-     ```
+# Delete Operations
 
-   * Get all zip documents and use projection to only display city and population. Sort documents by city name in descending order
-   
-     ```javascript
-     db.zips.find({}, { "city": 1, "pop": 1, "_id": 0 }).sort({"city": -1})
-     ```
+# delete all cities called 'CHICOPEE'. Ignore case
+db.zips.remove({ "city": { $regex: /chicopee/i }})
 
-1. Delete operations
 
-   * Delete all cities called 'CHICOPEE'. Ignore case
 
-     ```javascript
-     db.zips.remove({ "city": { "$regex": /chicopee/i }})
-     ```
+# Update Operations
 
-1. Update operations
-
-   * Update the city of 'BLANDFORD' by setting its population to 10
-
-     ```javascript
-     db.zips.updateOne({"city": "BLANDFORD"}, { "$set": { "pop": 10}})
-     ```
+# update the city of 'BLANDFORD' by setting its population to 10
+db.zips.updateOne({"city": "BLANDFORD"}, { $set: { "pop": 10}})
+```
 
 ---
 
 ## Conclusion
 
-This has been a quick introduction to getting started with MongoDB. In this guide we learned about 4 different ways to host your MongoDB instance. We also learned about 5 different tools that can be used to manage your MongoDB databases. Lastly, we explored some basic queries that can be used to create a database, create a collection, insert data, update data, and fetch data.
+For more information on MongoDB, please see the following curated list of resources:
 
-MongoDB is an exciting and relatively new database that has a massive community and knowledgebase. I encourage all those that are interested to get involved by trying out the following learning resources:
+- **Official Documentation**
+  - [MongoDB Docs] - The official MongoDB documentation
 
-* [MongoDB Docs] - The official MongoDB documentation
-* [MongoDB University] - Free Online Classes on MongoDB from MongoDB
+- **Online Training**
+  - [MongoDB University] - Free Online Classes on MongoDB from MongoDB
+  - [MongoDB - The Complete Developer's Guide](https://www.udemy.com/course/mongodb-the-complete-developers-guide/) (by Academind)
+  - [The Complete Developers Guide to MongoDB](https://www.udemy.com/course/the-complete-developers-guide-to-mongodb/) (by Stephen Grider)
 
-The following MongoDB book is my personal favourite:
+- **Books**
+  - [MongoDB: The Definitive Guide, 3rd Edition](https://www.oreilly.com/library/view/mongodb-the-definitive/9781491954454/) (by Shannon Bradshaw, Eoin Brazil, Kristina Chodorow)
+  - [Learn MongoDB 4.x](https://www.oreilly.com/library/view/learn-mongodb-4x/9781789619386/) (by Doug Bierer)
+  - [MongoDB Applied Design Patterns](https://www.oreilly.com/library/view/mongodb-applied-design/9781449340056/) (by Rick Copeland)
+  - [MongoDB Recipes: With Data Modeling and Query Building Strategies](https://www.oreilly.com/library/view/mongodb-recipes-with/9781484248911/) (by Subhashini Chellappan, Dharanitharan Ganesan)
 
-* [MongoDB: The Definitive Guide, 2nd Edition] - My personal
-* [MongoDB: The Definitive Guide, 3rd Edition (Early Release)]
+- **Certifications**
+  - [MongoDB Professional
+Certification Program](https://university.mongodb.com/certification)
 
-If you're interested in certification, please see the [MongoDB Professional
-Certification Program](https://university.mongodb.com/certification).
+
 
 ---
 [MongoDB Docs]: https://docs.mongodb.com
 [MongoDB University]: https://university.mongodb.com
-[MongoDB: The Definitive Guide, 2nd Edition]: http://shop.oreilly.com/product/0636920028031.do
 [MongoDB: The Definitive Guide, 3rd Edition (Early Release)]: http://shop.oreilly.com/product/0636920049531.do
 [Docker]: https://www.docker.com
 [Docker Guide]:(https://github.com/drminnaar/guides/tree/master/docker-guide)
@@ -447,10 +718,9 @@ Certification Program](https://university.mongodb.com/certification).
 [MongoDB Atlas]: https://www.mongodb.com/cloud/atlas
 [MongoDB Documentation]: https://docs.atlas.mongodb.com
 [Daas]: https://en.wikipedia.org/wiki/Data_as_a_service
-[MLab]: https://mlab.com
-[MLab Documentation]: https://docs.mlab.com
 [MongoDB Compass]: https://www.mongodb.com/products/compass
 [NoSqlBooster]: https://nosqlBooster.com
 [Robo 3T]: https://robomongo.org
-[Azure CosmosDB]: https://azure.microsoft.com/en-us/services/cosmos-db
-[Azure CosmosDB Extension]: https://marketplace.visualstudio.com/items?itemName=ms-azuretools.vscode-cosmosdb
+[Azure Databases Extension]: https://marketplace.visualstudio.com/items?itemName=ms-azuretools.vscode-cosmosdb
+[Windows Subsystem For Linux (WSL)]: https://docs.microsoft.com/en-us/windows/wsl/about
+[Windows Subsystem For Linux 2 (WSL2)]: https://docs.microsoft.com/en-us/windows/wsl/about#what-is-wsl-2
