@@ -44,6 +44,7 @@ For more information in terms of what MongoDb offerings are available for you to
 I will discuss 4 options to get up and running with MongoDB:
 
 - Local Install
+- WSL2 Install
 - Host in Docker
 - MongoDB Atlas (Database As A Service)
 
@@ -88,16 +89,20 @@ However, it is possible to install MongoDb on _[Windows Subsystem for Linux 2 (W
   # Reload local package database
   sudo apt update
 
-  # Install the MongoDB packages
+  # Install the MongoDB packages (shell, tools, server, etc)
   sudo apt-get install -y mongodb-org
 
-  # Alternatively, one can install
+  # Alternatively, one can install only the shell and tools
   sudo apt-get install -y mongodb-org-shell
+  sudo apt-get install -y mongodb-org-tools
+
+  # or only install the server
+  sudo apt-get install -y mongodb-org-server
   ```
 
 - Start MongoDB service (`mongod`)
   
-  > **NOTE:** Typically the command `sudo systemctl status|start|stop|restart mongodb` is used to manage the MongoDB service. However, in order to keep WSL lightweight, `SysVinit` is used over `systemd`. Therefore, upon installing MongoDB using the commands above, an error is received that prevents MongoDB from being setup as a service. This is because systemctl requires systemd. Despite this constraint, one can still start a MongoDB instance using the commands below.
+  > **NOTE:** Typically the command `sudo systemctl status|start|stop|restart mongodb` is used to manage the MongoDB service. However, in order to keep WSL lightweight, `SysVinit` is used over `systemd`. Therefore, upon installing MongoDB using the commands above, an error is received that prevents MongoDB from being setup as a service. This is because systemctl requires systemd. Despite this constraint, one can still manage a MongoDB instance in WSL2 using the commands below.
 
   ```bash
   # Verify that the MongoDB shell has been installed
